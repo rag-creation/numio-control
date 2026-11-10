@@ -178,6 +178,7 @@ class ControlService : AccessibilityService() {
 
         val params = overlayParams(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT).apply {
             flags = flags or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+            alpha = 1f
             layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
             // Frosted glass behind the panel, on phones that support it (Android 12+)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && windows.isCrossWindowBlurEnabled) {

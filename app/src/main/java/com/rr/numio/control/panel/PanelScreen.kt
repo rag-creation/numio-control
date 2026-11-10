@@ -33,6 +33,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -120,8 +121,9 @@ fun PanelScreen(
         }
         AnimatedVisibility(
             visible = visible,
-            enter = slideInVertically { -it / 4 } + fadeIn(),
-            exit = slideOutVertically { -it / 4 } + fadeOut(),
+            // Slide only: no fade on the panel itself, so it is never left see-through
+            enter = slideInVertically { -it },
+            exit = slideOutVertically { -it },
             modifier = Modifier.align(Alignment.TopCenter),
         ) {
             Column(
@@ -314,6 +316,7 @@ private fun SliderCard(controller: PanelController) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SliderRow(
     leading: ImageVector,
@@ -327,6 +330,11 @@ private fun SliderRow(
     onTrailing: () -> Unit,
 ) {
     val c = Numio.colors
+    val colors = SliderDefaults.colors(
+        thumbColor = c.thumb,
+        activeTrackColor = fill,
+        inactiveTrackColor = c.track,
+    )
     Row(Modifier.fillMaxWidth().height(64.dp), verticalAlignment = Alignment.CenterVertically) {
         Box(Modifier.size(44.dp), contentAlignment = Alignment.Center) {
             Icon(leading, contentDescription = null, tint = c.accentInk, modifier = Modifier.size(26.dp))
@@ -334,11 +342,20 @@ private fun SliderRow(
         Slider(
             value = value,
             onValueChange = onChange,
-            colors = SliderDefaults.colors(
-                thumbColor = c.thumb,
-                activeTrackColor = fill,
-                inactiveTrackColor = c.track,
-            ),
+            colors = colors,
+            // A round cream knob and a thick track with no gap or end dot, like the pictures
+            thumb = {
+                Box(Modifier.size(28.dp).clip(CircleShape).background(c.thumb))
+            },
+            track = { state ->
+                SliderDefaults.Track(
+                    sliderState = state,
+                    colors = colors,
+                    drawStopIndicator = null,
+                    thumbTrackGapSize = 0.dp,
+                    modifier = Modifier.height(14.dp),
+                )
+            },
             modifier = Modifier
                 .weight(1f)
                 .padding(horizontal = 4.dp)

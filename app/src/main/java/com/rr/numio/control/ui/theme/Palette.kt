@@ -25,8 +25,8 @@ data class ControlPalette(
 object Palettes {
     val Dark = ControlPalette(
         background = Color(0xFF0F0F0E),
-        scrim = Color(0x8C0F0F0E),
-        card = Color(0xF01B1A18),
+        scrim = Color(0xB30F0F0E),
+        card = Color(0xFF1B1A18),
         button = Color(0xFF2C2A26),
         divider = Color(0xFF34312C),
         track = Color(0xFF3A3731),
@@ -42,7 +42,7 @@ object Palettes {
     val Light = ControlPalette(
         background = Color(0xFFF6F4EE),
         scrim = Color(0x66191815),
-        card = Color(0xF5FBFAF6),
+        card = Color(0xFFFBFAF6),
         button = Color(0xFFE8E4DA),
         divider = Color(0xFFDEDAD0),
         track = Color(0xFFDDD8CC),
