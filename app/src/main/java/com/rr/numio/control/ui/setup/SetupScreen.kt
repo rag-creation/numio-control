@@ -198,8 +198,8 @@ fun SetupScreen(settings: AppSettings, refreshKey: Int) {
             Card {
                 Text(
                     "Every button has a spoken label for TalkBack and tells you whether it is on or off. " +
-                        "With TalkBack, the easiest way in is the accessibility button or shortcut: set it to Control by Numio panel " +
-                        "in Accessibility settings. The edge handle is also a button, \"Open Control panel\".",
+                        "With TalkBack, the edge handle is a button called \"Open Control panel\". " +
+                        "Back or the Close button at the bottom closes the panel.",
                     color = c.text,
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(16.dp),

@@ -8,7 +8,7 @@ A private, offline control panel for Android. Swipe in from the edge of the scre
 - Built for TalkBack from the start
 - Free and open source (GPL-3.0)
 
-> **Status: milestone 1 (in testing).** The panel opens from the screen edge or the accessibility button, with the Wi-Fi and Bluetooth pills, ten round buttons, brightness and volume sliders, and the power menu. The editor comes next.
+> **Status: milestone 1 (in testing).** The panel opens from the screen edge, with the Wi-Fi and Bluetooth pills, ten round buttons, brightness and volume sliders, and the power menu. The editor comes next.
 
 ## What each button can do
 
@@ -35,14 +35,14 @@ The panel is an accessibility service because that's the only way an Android app
 
 ### "Restricted setting" on Android 13 and newer
 
-If you install the APK from a file, Android greys out the switch for its accessibility service. Open **App info → ⋮ → Allow restricted settings**, then turn it on in **Accessibility → Installed apps**. Apps installed from an app store such as F-Droid don't need this.
+If you install the APK from a file, Android greys out the switch for its accessibility service. Open **App info → ⋮ → Allow restricted settings**, then turn it on in **Accessibility → Installed apps → Control by Numio panel**. Apps installed from an app store such as F-Droid don't need this.
 
 ## Accessibility
 
 - Every button is a real button or switch to TalkBack, with a label and its state ("Flashlight, off, switch")
 - Buttons that open Android's panels say so ("Wi-Fi, on, double-tap to open Wi-Fi panel")
 - Sliders can be moved with TalkBack's volume-key or swipe adjust
-- The accessibility button / shortcut opens and closes the panel, so you don't need to find the edge handle
+- The edge handle is a button for TalkBack ("Open Control panel")
 - Touch targets are at least 48 dp, and text follows the phone's font size
 - Back closes the panel, and so does the Close button at its bottom
 

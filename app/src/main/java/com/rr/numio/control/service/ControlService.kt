@@ -1,6 +1,5 @@
 package com.rr.numio.control.service
 
-import android.accessibilityservice.AccessibilityButtonController
 import android.accessibilityservice.AccessibilityService
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -78,8 +77,6 @@ class ControlService : AccessibilityService() {
     private var theme by mutableStateOf(ThemeMode.DEFAULT)
     private var layout by mutableStateOf(PanelLayout.DEFAULT)
 
-    private var buttonCallback: AccessibilityButtonController.AccessibilityButtonCallback? = null
-
     private val screenOff = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) = removePanelNow()
     }
@@ -106,16 +103,6 @@ class ControlService : AccessibilityService() {
         ContextCompat.registerReceiver(
             this, screenOff, IntentFilter(Intent.ACTION_SCREEN_OFF), ContextCompat.RECEIVER_NOT_EXPORTED,
         )
-
-        // The accessibility button / shortcut also opens and closes the panel,
-        // so it works without reaching for the edge handle (handy with TalkBack).
-        val callback = object : AccessibilityButtonController.AccessibilityButtonCallback() {
-            override fun onClicked(controller: AccessibilityButtonController) {
-                if (panel == null) openPanel() else closePanel()
-            }
-        }
-        accessibilityButtonController.registerAccessibilityButtonCallback(callback)
-        buttonCallback = callback
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) = Unit // asks for no events
@@ -124,7 +111,6 @@ class ControlService : AccessibilityService() {
     override fun onDestroy() {
         instance = null
         running.value = false
-        buttonCallback?.let { accessibilityButtonController.unregisterAccessibilityButtonCallback(it) }
         runCatching { unregisterReceiver(screenOff) }
         removePanelNow()
         removeHandle()

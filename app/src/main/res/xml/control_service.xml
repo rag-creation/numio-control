@@ -2,11 +2,11 @@
 <!-- Control by Numio uses the accessibility service only to draw the panel and its
      edge handle over other apps, and for the lock screen, screenshot and power menu
      actions. No event types and canRetrieveWindowContent="false": it never sees
-     what is on the screen or what you type. The accessibility button flag lets the
-     accessibility button or shortcut open the panel too. -->
+     what is on the screen or what you type.
+     No accessibilityFlags: asking for the accessibility button makes Android
+     (11 and newer) show only a "shortcut" switch instead of an On switch. -->
 <accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
     android:accessibilityFeedbackType="feedbackGeneric"
-    android:accessibilityFlags="flagRequestAccessibilityButton"
     android:canRetrieveWindowContent="false"
     android:description="@string/service_description"
     android:isAccessibilityTool="false"
