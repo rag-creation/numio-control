@@ -207,6 +207,12 @@ class PanelController(
         globalAction(AccessibilityService.GLOBAL_ACTION_LOCK_SCREEN)
     }
 
+    /** Opens Android's (Samsung's) own notification panel. */
+    fun systemNotifications() {
+        closePanel()
+        globalAction(AccessibilityService.GLOBAL_ACTION_NOTIFICATIONS)
+    }
+
     fun powerMenu() {
         closePanel()
         globalAction(AccessibilityService.GLOBAL_ACTION_POWER_DIALOG)

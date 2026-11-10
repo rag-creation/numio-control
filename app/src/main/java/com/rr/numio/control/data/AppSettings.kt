@@ -11,6 +11,20 @@ import kotlinx.coroutines.flow.map
 
 private val Context.settingsStore by preferencesDataStore(name = "settings")
 
+/** How the panel opens. The top modes catch a swipe down on the status bar first. */
+enum class OpenMode(val key: String) {
+    /** Swipe down on the right half of the top edge; the left half still opens Samsung's panel. */
+    TOP_RIGHT("top_right"),
+    /** Swipe down anywhere on the top edge. The panel's bell button opens notifications. */
+    TOP_FULL("top_full"),
+    /** The amber handle on a side edge. */
+    EDGE("edge");
+
+    companion object {
+        fun fromKey(key: String?): OpenMode = entries.firstOrNull { it.key == key } ?: TOP_RIGHT
+    }
+}
+
 /** Which screen edge the panel handle sits on. */
 enum class HandleSide(val key: String) {
     RIGHT("right"), LEFT("left");
@@ -29,7 +43,11 @@ enum class HandlePosition(val key: String, val fraction: Float) {
     }
 }
 
-data class HandleSettings(val side: HandleSide, val position: HandlePosition)
+data class HandleSettings(
+    val side: HandleSide,
+    val position: HandlePosition,
+    val mode: OpenMode = OpenMode.TOP_RIGHT,
+)
 
 /** App settings, stored only on the phone with DataStore. */
 class AppSettings(context: Context) {
@@ -38,11 +56,16 @@ class AppSettings(context: Context) {
     private val sideKey = stringPreferencesKey("handle_side")
     private val positionKey = stringPreferencesKey("handle_position")
     private val layoutKey = stringPreferencesKey("panel_layout")
+    private val modeKey = stringPreferencesKey("open_mode")
 
     val themeMode: Flow<ThemeMode> = store.data.map { ThemeMode.fromKey(it[themeKey]) }
 
     val handle: Flow<HandleSettings> = store.data.map {
-        HandleSettings(HandleSide.fromKey(it[sideKey]), HandlePosition.fromKey(it[positionKey]))
+        HandleSettings(
+            HandleSide.fromKey(it[sideKey]),
+            HandlePosition.fromKey(it[positionKey]),
+            OpenMode.fromKey(it[modeKey]),
+        )
     }
 
     val layout: Flow<PanelLayout> = store.data.map { PanelLayout.decode(it[layoutKey]) }
@@ -50,5 +73,6 @@ class AppSettings(context: Context) {
     suspend fun setThemeMode(mode: ThemeMode) = store.edit { it[themeKey] = mode.key }
     suspend fun setHandleSide(side: HandleSide) = store.edit { it[sideKey] = side.key }
     suspend fun setHandlePosition(p: HandlePosition) = store.edit { it[positionKey] = p.key }
+    suspend fun setOpenMode(mode: OpenMode) = store.edit { it[modeKey] = mode.key }
     suspend fun setLayout(layout: PanelLayout) = store.edit { it[layoutKey] = layout.encode() }
 }

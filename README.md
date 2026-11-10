@@ -1,6 +1,6 @@
 # Control by Numio
 
-A private, offline control panel for Android. Swipe in from the edge of the screen and your quick buttons, brightness and volume are there. Part of the Numio family, alongside Numio Calculator, Clock by Numio, Ezhuthola and the other Numio apps.
+A private, offline control panel for Android. Swipe down from the top right of the screen and your quick buttons, brightness and volume are there. Part of the Numio family, alongside Numio Calculator, Clock by Numio, Ezhuthola and the other Numio apps.
 
 - No internet permission (the CI build fails if a release APK ever asks for it)
 - No ads, analytics, tracking or accounts
@@ -8,7 +8,7 @@ A private, offline control panel for Android. Swipe in from the edge of the scre
 - Built for TalkBack from the start
 - Free and open source (GPL-3.0)
 
-> **Status: milestone 1 (in testing).** The panel opens from the screen edge, with the Wi-Fi and Bluetooth pills, ten round buttons, brightness and volume sliders, and the power menu. The editor comes next.
+> **Status: milestone 1 (in testing).** The panel opens with a swipe down from the top (or from a side handle), with the Wi-Fi and Bluetooth pills, ten round buttons, brightness and volume sliders, and the power menu. The editor comes next.
 
 ## What each button can do
 
@@ -30,19 +30,27 @@ Android lets a normal app switch some things directly. For the rest it only lets
 The panel is an accessibility service because that's the only way an Android app can draw over other apps from the screen edge and lock the screen. Control by Numio asks for the least it can:
 
 - **No accessibility events and `canRetrieveWindowContent="false"`**: it never sees what's on the screen, what you type or your notifications ([`control_service.xml`](app/src/main/res/xml/control_service.xml))
-- It only draws two windows of its own: the thin edge handle, and the panel while it's open
-- It uses three accessibility actions: lock screen, power menu, screenshot
+- It only draws two windows of its own: the opening strip (over the top of the status bar, or a thin side handle), and the panel while it's open
+- It uses four accessibility actions: lock screen, power menu, screenshot, open notifications
 
 ### "Restricted setting" on Android 13 and newer
 
 If you install the APK from a file, Android greys out the switch for its accessibility service. Open **App info → ⋮ → Allow restricted settings**, then turn it on in **Accessibility → Installed apps → Control by Numio panel**. Apps installed from an app store such as F-Droid don't need this.
+
+## Opening the panel
+
+Android doesn't let an app replace the system's swipe-down panel. Instead, Control by Numio puts an invisible strip over the status bar that catches the swipe first:
+
+- **Top right** (default): swipe down on the right half for Control, on the left half for the phone's own notifications, like an iPhone
+- **Whole top**: swipe down anywhere for Control; the bell button in the panel opens notifications
+- **Side edge**: a thin amber handle on the left or right edge
 
 ## Accessibility
 
 - Every button is a real button or switch to TalkBack, with a label and its state ("Flashlight, off, switch")
 - Buttons that open Android's panels say so ("Wi-Fi, on, double-tap to open Wi-Fi panel")
 - Sliders can be moved with TalkBack's volume-key or swipe adjust
-- The edge handle is a button for TalkBack ("Open Control panel")
+- The top strip and the edge handle are buttons for TalkBack ("Open Control panel")
 - Touch targets are at least 48 dp, and text follows the phone's font size
 - Back closes the panel, and so does the Close button at its bottom
 

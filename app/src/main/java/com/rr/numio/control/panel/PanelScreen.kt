@@ -165,6 +165,7 @@ private fun Header(controller: PanelController) {
     ) {
         NumioWordmark(height = 20.dp, textColor = c.text)
         Spacer(Modifier.weight(1f))
+        HeaderButton(ControlIcons.Bell, "Notifications", controller::systemNotifications)
         HeaderButton(ControlIcons.Edit, "Edit panel", controller::openApp)
         HeaderButton(ControlIcons.Power, "Power menu", controller::powerMenu)
         HeaderButton(ControlIcons.Settings, "Control settings", controller::openApp)

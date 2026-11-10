@@ -54,6 +54,7 @@ import com.rr.numio.control.data.AppSettings
 import com.rr.numio.control.data.HandlePosition
 import com.rr.numio.control.data.HandleSettings
 import com.rr.numio.control.data.HandleSide
+import com.rr.numio.control.data.OpenMode
 import com.rr.numio.control.service.ControlService
 import com.rr.numio.control.ui.theme.ControlIcons
 import com.rr.numio.control.ui.theme.Numio
@@ -114,7 +115,7 @@ fun SetupScreen(settings: AppSettings, refreshKey: Int) {
                 }
             }
             Text(
-                "A control panel for your phone. Swipe in from the edge of the screen, or tap the amber handle, to open it.",
+                "A control panel for your phone. Swipe down from the top right of the screen to open it.",
                 color = c.textSoft,
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(horizontal = 4.dp),
@@ -169,16 +170,38 @@ fun SetupScreen(settings: AppSettings, refreshKey: Int) {
             SectionTitle("Panel")
             Card {
                 Choice(
-                    label = "Handle side",
-                    options = listOf("Right" to (handle.side == HandleSide.RIGHT), "Left" to (handle.side == HandleSide.LEFT)),
-                    onPick = { i -> scope.launch { settings.setHandleSide(if (i == 0) HandleSide.RIGHT else HandleSide.LEFT) } },
+                    label = "Open with",
+                    options = listOf(
+                        "Top right" to (handle.mode == OpenMode.TOP_RIGHT),
+                        "Whole top" to (handle.mode == OpenMode.TOP_FULL),
+                        "Side edge" to (handle.mode == OpenMode.EDGE),
+                    ),
+                    onPick = { i -> scope.launch { settings.setOpenMode(OpenMode.entries[i]) } },
                 )
-                Divider()
-                Choice(
-                    label = "Handle position",
-                    options = listOf("Top" to (handle.position == HandlePosition.TOP), "Middle" to (handle.position == HandlePosition.MIDDLE)),
-                    onPick = { i -> scope.launch { settings.setHandlePosition(if (i == 0) HandlePosition.TOP else HandlePosition.MIDDLE) } },
+                Text(
+                    when (handle.mode) {
+                        OpenMode.TOP_RIGHT -> "Swipe down from the right half of the top edge. The left half still opens Samsung's panel."
+                        OpenMode.TOP_FULL -> "Swipe down anywhere on the top edge. The bell button in the panel opens your notifications."
+                        OpenMode.EDGE -> "Swipe in from the amber handle, or tap it."
+                    },
+                    color = c.textSoft,
+                    fontSize = 13.sp,
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 12.dp),
                 )
+                if (handle.mode == OpenMode.EDGE) {
+                    Divider()
+                    Choice(
+                        label = "Handle side",
+                        options = listOf("Right" to (handle.side == HandleSide.RIGHT), "Left" to (handle.side == HandleSide.LEFT)),
+                        onPick = { i -> scope.launch { settings.setHandleSide(if (i == 0) HandleSide.RIGHT else HandleSide.LEFT) } },
+                    )
+                    Divider()
+                    Choice(
+                        label = "Handle position",
+                        options = listOf("Top" to (handle.position == HandlePosition.TOP), "Middle" to (handle.position == HandlePosition.MIDDLE)),
+                        onPick = { i -> scope.launch { settings.setHandlePosition(if (i == 0) HandlePosition.TOP else HandlePosition.MIDDLE) } },
+                    )
+                }
                 Divider()
                 Choice(
                     label = "Look",
@@ -198,7 +221,7 @@ fun SetupScreen(settings: AppSettings, refreshKey: Int) {
             Card {
                 Text(
                     "Every button has a spoken label for TalkBack and tells you whether it is on or off. " +
-                        "With TalkBack, the edge handle is a button called \"Open Control panel\". " +
+                        "With TalkBack, the top strip (or the edge handle) is a button called \"Open Control panel\". " +
                         "Back or the Close button at the bottom closes the panel.",
                     color = c.text,
                     style = MaterialTheme.typography.bodyMedium,

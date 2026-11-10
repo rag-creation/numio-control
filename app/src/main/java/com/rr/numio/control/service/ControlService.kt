@@ -1,6 +1,7 @@
 package com.rr.numio.control.service
 
 import android.accessibilityservice.AccessibilityService
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -26,6 +27,7 @@ import com.rr.numio.control.data.AppSettings
 import com.rr.numio.control.data.HandleSettings
 import com.rr.numio.control.data.HandlePosition
 import com.rr.numio.control.data.HandleSide
+import com.rr.numio.control.data.OpenMode
 import com.rr.numio.control.panel.PanelController
 import com.rr.numio.control.panel.PanelLayout
 import com.rr.numio.control.panel.PanelScreen
@@ -125,14 +127,50 @@ class ControlService : AccessibilityService() {
     private fun showHandle() {
         removeHandle()
         val density = resources.displayMetrics.density
-        val onRight = handleSettings.side == HandleSide.RIGHT
-        val view = HandleView(this, onRight) { openPanel() }
-        val params = overlayParams((22 * density).toInt(), (128 * density).toInt()).apply {
-            flags = flags or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-            gravity = Gravity.TOP or (if (onRight) Gravity.END else Gravity.START)
-            y = (screenHeight() * handleSettings.position.fraction).toInt()
+        val (view, params) = when (handleSettings.mode) {
+            OpenMode.EDGE -> {
+                val onRight = handleSettings.side == HandleSide.RIGHT
+                HandleView(this, onRight) { openPanel() } to
+                    overlayParams((22 * density).toInt(), (128 * density).toInt()).apply {
+                        flags = flags or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                        gravity = Gravity.TOP or (if (onRight) Gravity.END else Gravity.START)
+                        y = (screenHeight() * handleSettings.position.fraction).toInt()
+                    }
+            }
+            OpenMode.TOP_RIGHT, OpenMode.TOP_FULL -> {
+                val full = handleSettings.mode == OpenMode.TOP_FULL
+                val width = if (full) WindowManager.LayoutParams.MATCH_PARENT else screenWidth() / 2
+                TopZoneView(this) { openPanel() } to
+                    overlayParams(width, statusBarHeight()).apply {
+                        flags = flags or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+                        layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+                        gravity = Gravity.TOP or Gravity.END
+                        y = 0
+                    }
+            }
         }
         runCatching { windows.addView(view, params) }.onSuccess { handle = view }
+    }
+
+    private fun screenWidth(): Int =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            windows.currentWindowMetrics.bounds.width()
+        } else {
+            resources.displayMetrics.widthPixels
+        }
+
+    /** Height of the status bar, at least 24 dp so the strip is easy to hit. */
+    @SuppressLint("DiscouragedApi", "InternalInsetResource")
+    private fun statusBarHeight(): Int {
+        val min = (24 * resources.displayMetrics.density).toInt()
+        val fromInsets = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            windows.currentWindowMetrics.windowInsets.getInsets(android.view.WindowInsets.Type.statusBars()).top
+        } else {
+            val id = resources.getIdentifier("status_bar_height", "dimen", "android")
+            if (id > 0) resources.getDimensionPixelSize(id) else 0
+        }
+        return maxOf(fromInsets, min)
     }
 
     private fun removeHandle() {

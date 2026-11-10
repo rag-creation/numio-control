@@ -49,6 +49,7 @@ object ControlIcons {
     val SunAuto = lineIcon("sun_auto", "M12 7a5 5 0 1 1 0 10a5 5 0 1 1 0-10zM12 1.5v2M12 20.5v2M1.5 12h2M20.5 12h2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M4.6 19.4L6 18M18 6l1.4-1.4M10.3 14.5L12 9.5l1.7 5M10.9 13h2.2")
     val Volume = lineIcon("volume", "M4 9h4l5-4v14l-5-4H4zM16.5 8.5a5 5 0 0 1 0 7")
     val VolumeOff = lineIcon("volume_off", "M4 9h4l5-4v14l-5-4H4zM16 9.5l5 5M21 9.5l-5 5")
+    val Bell = lineIcon("bell", "M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 21h4")
     val Edit = lineIcon("edit", "M4 20h4L19 9l-4-4L4 16zM13.5 6.5l4 4")
     val Power = lineIcon("power", "M12 3v8M6.3 6.3a8 8 0 1 0 11.4 0")
     val Settings = lineIcon("settings", "M12 9a3 3 0 1 1 0 6a3 3 0 1 1 0-6zM12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9L7 7M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1")
