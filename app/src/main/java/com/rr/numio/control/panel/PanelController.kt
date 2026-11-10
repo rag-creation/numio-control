@@ -164,7 +164,7 @@ class PanelController(
     }
 
     /** Brightness slider, 0 to 1. Moving it turns auto brightness off, like the system slider. */
-    fun setBrightness(position: Float) {
+    fun changeBrightness(position: Float) {
         if (!canChangeSettings) return askChangeSettings()
         val cr = context.contentResolver
         if (autoBrightnessOn) {
@@ -187,7 +187,7 @@ class PanelController(
     }
 
     /** Media volume slider, 0 to 1. */
-    fun setVolume(position: Float) {
+    fun changeVolume(position: Float) {
         val max = audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
         val steps = Math.round(position.coerceIn(0f, 1f) * max)
         runCatching { audio.setStreamVolume(AudioManager.STREAM_MUSIC, steps, 0) }
