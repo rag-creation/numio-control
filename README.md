@@ -45,6 +45,10 @@ Android doesn't let an app replace the system's swipe-down panel. Instead, Contr
 - **Whole top**: swipe down anywhere for Control; the bell button in the panel opens notifications
 - **Side edge**: a thin amber handle on the left or right edge
 
+## Pictures
+
+Settings → Panel → **Picture** puts a picture behind the panel. **Night room** is a test picture (a window with the moon, a lamp, plants and a mug) with a sleeping kitten on the Wi-Fi / Bluetooth bar. It will be replaced by RR's own drawings in the Looks milestone.
+
 ## Accessibility
 
 - Every button is a real button or switch to TalkBack, with a label and its state ("Flashlight, off, switch")

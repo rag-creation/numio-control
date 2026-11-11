@@ -25,6 +25,17 @@ enum class OpenMode(val key: String) {
     }
 }
 
+/** A picture behind the panel, with an optional mascot on the Wi-Fi / Bluetooth bar. */
+enum class PanelScene(val key: String) {
+    NONE("none"),
+    /** Test picture: night room with a window and moon, and the sleeping kitten. */
+    NIGHT_ROOM("night_room");
+
+    companion object {
+        fun fromKey(key: String?): PanelScene = entries.firstOrNull { it.key == key } ?: NONE
+    }
+}
+
 /** Which screen edge the panel handle sits on. */
 enum class HandleSide(val key: String) {
     RIGHT("right"), LEFT("left");
@@ -57,6 +68,7 @@ class AppSettings(context: Context) {
     private val positionKey = stringPreferencesKey("handle_position")
     private val layoutKey = stringPreferencesKey("panel_layout")
     private val modeKey = stringPreferencesKey("open_mode")
+    private val sceneKey = stringPreferencesKey("panel_scene")
 
     val themeMode: Flow<ThemeMode> = store.data.map { ThemeMode.fromKey(it[themeKey]) }
 
@@ -68,11 +80,14 @@ class AppSettings(context: Context) {
         )
     }
 
+    val scene: Flow<PanelScene> = store.data.map { PanelScene.fromKey(it[sceneKey]) }
+
     val layout: Flow<PanelLayout> = store.data.map { PanelLayout.decode(it[layoutKey]) }
 
     suspend fun setThemeMode(mode: ThemeMode) = store.edit { it[themeKey] = mode.key }
     suspend fun setHandleSide(side: HandleSide) = store.edit { it[sideKey] = side.key }
     suspend fun setHandlePosition(p: HandlePosition) = store.edit { it[positionKey] = p.key }
     suspend fun setOpenMode(mode: OpenMode) = store.edit { it[modeKey] = mode.key }
+    suspend fun setScene(scene: PanelScene) = store.edit { it[sceneKey] = scene.key }
     suspend fun setLayout(layout: PanelLayout) = store.edit { it[layoutKey] = layout.encode() }
 }

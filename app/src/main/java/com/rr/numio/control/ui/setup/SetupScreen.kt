@@ -55,6 +55,7 @@ import com.rr.numio.control.data.HandlePosition
 import com.rr.numio.control.data.HandleSettings
 import com.rr.numio.control.data.HandleSide
 import com.rr.numio.control.data.OpenMode
+import com.rr.numio.control.data.PanelScene
 import com.rr.numio.control.service.ControlService
 import com.rr.numio.control.ui.theme.ControlIcons
 import com.rr.numio.control.ui.theme.Numio
@@ -77,6 +78,7 @@ fun SetupScreen(settings: AppSettings, refreshKey: Int) {
         context.getSystemService(NotificationManager::class.java).isNotificationPolicyAccessGranted
     }
     val theme by settings.themeMode.collectAsState(initial = ThemeMode.DEFAULT)
+    val scene by settings.scene.collectAsState(initial = PanelScene.NONE)
     val handle by settings.handle.collectAsState(initial = HandleSettings(HandleSide.RIGHT, HandlePosition.TOP))
     val version = remember {
         runCatching { context.packageManager.getPackageInfo(context.packageName, 0).versionName }.getOrNull() ?: ""
@@ -202,6 +204,12 @@ fun SetupScreen(settings: AppSettings, refreshKey: Int) {
                         onPick = { i -> scope.launch { settings.setHandlePosition(if (i == 0) HandlePosition.TOP else HandlePosition.MIDDLE) } },
                     )
                 }
+                Divider()
+                Choice(
+                    label = "Picture",
+                    options = listOf("None" to (scene == PanelScene.NONE), "Night room" to (scene == PanelScene.NIGHT_ROOM)),
+                    onPick = { i -> scope.launch { settings.setScene(if (i == 0) PanelScene.NONE else PanelScene.NIGHT_ROOM) } },
+                )
                 Divider()
                 Choice(
                     label = "Look",

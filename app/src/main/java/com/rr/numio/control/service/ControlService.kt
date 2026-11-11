@@ -28,6 +28,7 @@ import com.rr.numio.control.data.HandleSettings
 import com.rr.numio.control.data.HandlePosition
 import com.rr.numio.control.data.HandleSide
 import com.rr.numio.control.data.OpenMode
+import com.rr.numio.control.data.PanelScene
 import com.rr.numio.control.panel.PanelController
 import com.rr.numio.control.panel.PanelLayout
 import com.rr.numio.control.panel.PanelScreen
@@ -78,6 +79,7 @@ class ControlService : AccessibilityService() {
     private var panelVisible by mutableStateOf(false)
     private var theme by mutableStateOf(ThemeMode.DEFAULT)
     private var layout by mutableStateOf(PanelLayout.DEFAULT)
+    private var scene by mutableStateOf(PanelScene.NONE)
 
     private val screenOff = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) = removePanelNow()
@@ -95,6 +97,7 @@ class ControlService : AccessibilityService() {
 
         scope.launch { settings.themeMode.collect { theme = it } }
         scope.launch { settings.layout.collect { layout = it } }
+        scope.launch { settings.scene.collect { scene = it } }
         scope.launch {
             settings.handle.collect {
                 handleSettings = it
@@ -205,8 +208,10 @@ class ControlService : AccessibilityService() {
         val compose = ComposeView(this).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindow)
             setContent {
-                ControlTheme(dark = theme.isDark(isSystemInDarkTheme())) {
-                    PanelScreen(controller, layout, panelVisible, ::closePanel)
+                // A picture scene is drawn for dark cards
+                val dark = scene != PanelScene.NONE || theme.isDark(isSystemInDarkTheme())
+                ControlTheme(dark = dark) {
+                    PanelScreen(controller, layout, scene, panelVisible, ::closePanel)
                 }
                 LaunchedEffect(Unit) { panelVisible = true }
             }

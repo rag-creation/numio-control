@@ -5,6 +5,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -19,6 +20,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
@@ -43,6 +45,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -52,6 +56,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.rr.numio.control.R
+import com.rr.numio.control.data.PanelScene
 import com.rr.numio.control.ui.theme.ControlIcons
 import com.rr.numio.control.ui.theme.Numio
 import com.rr.numio.control.ui.theme.NumioWordmark
@@ -100,24 +106,35 @@ private fun specFor(id: TileId, c: PanelController): TileSpec? = when (id) {
 fun PanelScreen(
     controller: PanelController,
     layout: PanelLayout,
+    scene: PanelScene,
     visible: Boolean,
     onClose: () -> Unit,
 ) {
     val c = Numio.colors
+    val room = scene == PanelScene.NIGHT_ROOM
     Box(Modifier.fillMaxSize()) {
         AnimatedVisibility(visible = visible, enter = fadeIn(), exit = fadeOut()) {
             // Tap outside the panel to close it. TalkBack users get the Close button below.
             Box(
                 Modifier
                     .fillMaxSize()
-                    .background(c.scrim)
+                    .background(if (room) Color(0xFF14120F) else c.scrim)
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null,
                         onClickLabel = "close panel",
                         onClick = onClose,
                     ),
-            )
+            ) {
+                if (room) {
+                    Image(
+                        painter = painterResource(R.drawable.scene_night_room),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                }
+            }
         }
         AnimatedVisibility(
             visible = visible,
@@ -137,7 +154,10 @@ fun PanelScreen(
                     .padding(horizontal = 16.dp, vertical = 12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
+                // Night room: start below the window so the moon and lamp stay in view
+                if (room) Spacer(Modifier.height(56.dp))
                 Header(controller)
+                Box(Modifier.padding(top = if (room) 58.dp else 0.dp)) {
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     ConnectionPill(
                         icon = ControlIcons.Wifi, title = "Wi-Fi", on = controller.wifiOn,
@@ -147,6 +167,18 @@ fun PanelScreen(
                         icon = ControlIcons.Bluetooth, title = "Bluetooth", on = controller.bluetoothOn,
                         clickLabel = "open Bluetooth settings", onClick = controller::openBluetooth,
                     )
+                }
+                if (room) {
+                    // The kitten sleeps on top of the bar, paws over its edge
+                    Image(
+                        painter = painterResource(R.drawable.scene_night_room_cat),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .offset(x = 80.dp, y = (-64).dp)
+                            .width(200.dp)
+                            .height(78.dp),
+                    )
+                }
                 }
                 TileGrid(layout.tiles.mapNotNull { specFor(it, controller) })
                 SliderCard(controller)
