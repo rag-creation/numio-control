@@ -1,0 +1,10 @@
+Control by Numio is a control panel you open by swiping in from the edge of the screen.
+
+It has big Wi-Fi and Bluetooth buttons, a grid of quick buttons (sound, flashlight, lock screen, airplane mode, location, mobile data, auto rotate, NFC, screen cast, power saving) and sliders for brightness and media volume.
+
+- No internet permission. The app never goes online.
+- No ads, analytics, tracking or accounts.
+- Every button has a spoken label for TalkBack, and the accessibility button can open the panel.
+- Free and open source (GPL-3.0).
+
+Android does not let apps switch Wi-Fi, Bluetooth, airplane mode, location, mobile data, NFC, screen cast or power saving directly, so those buttons show whether they are on and open Android's own panel for them.
