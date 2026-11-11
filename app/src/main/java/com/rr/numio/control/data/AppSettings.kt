@@ -25,14 +25,15 @@ enum class OpenMode(val key: String) {
     }
 }
 
-/** A picture behind the panel, with an optional mascot on the Wi-Fi / Bluetooth bar. */
+/** The panel's look: an illustrated scene, or plain Numio colours. */
 enum class PanelScene(val key: String) {
-    NONE("none"),
-    /** Test picture: night room with a window and moon, and the sleeping kitten. */
-    NIGHT_ROOM("night_room");
+    /** Cozy night garden: window and moon, lantern, plants, and the kitten peeking over the panel. */
+    NIGHT_GARDEN("night_room"),
+    /** Plain Numio dark / light, no picture. */
+    NONE("none");
 
     companion object {
-        fun fromKey(key: String?): PanelScene = entries.firstOrNull { it.key == key } ?: NONE
+        fun fromKey(key: String?): PanelScene = entries.firstOrNull { it.key == key } ?: NIGHT_GARDEN
     }
 }
 

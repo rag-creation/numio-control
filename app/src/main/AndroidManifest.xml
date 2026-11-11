@@ -52,5 +52,17 @@
                 android:name="android.accessibilityservice"
                 android:resource="@xml/control_service" />
         </service>
+
+        <!-- Music card only. Android shares what's playing with apps that have notification
+             access; this service is empty and never reads notifications. Optional. -->
+        <service
+            android:name=".service.MediaListener"
+            android:exported="true"
+            android:label="@string/media_label"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
     </application>
 </manifest>

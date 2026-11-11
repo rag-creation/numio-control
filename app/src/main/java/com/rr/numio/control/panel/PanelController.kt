@@ -62,6 +62,9 @@ class PanelController(
     var volume by mutableFloatStateOf(0.5f); private set
     var muted by mutableStateOf(false); private set
 
+    /** The music card. */
+    val media = MediaWatcher(context)
+
     private val torchId: String? = runCatching {
         camera.cameraIdList.firstOrNull { id ->
             val c = camera.getCameraCharacteristics(id)
@@ -84,6 +87,7 @@ class PanelController(
     }
 
     fun stop() {
+        media.stop()
         runCatching { camera.unregisterTorchCallback(torchCallback) }
     }
 
@@ -116,6 +120,7 @@ class PanelController(
         val max = audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC).coerceAtLeast(1)
         volume = audio.getStreamVolume(AudioManager.STREAM_MUSIC).toFloat() / max
         muted = audio.isStreamMute(AudioManager.STREAM_MUSIC) || volume == 0f
+        media.refresh()
     }
 
     // ---- Permissions ----
@@ -238,6 +243,13 @@ class PanelController(
     fun openCast() = open(Intent(Settings.ACTION_CAST_SETTINGS))
     fun openPowerSaving() = open(Intent(Settings.ACTION_BATTERY_SAVER_SETTINGS))
     fun openApp() = open(Intent(context, MainActivity::class.java))
+    fun askMusicAccess() = open(media.accessIntent())
+    fun openMusicApp() { media.appIntent()?.let { open(it) } }
+
+    /** Android's speaker / headphones picker; older Android opens Bluetooth settings. */
+    fun mediaOutput() {
+        if (media.showOutputSwitcher()) closePanel() else openBluetooth()
+    }
 
     /**
      * Starts the screen while the panel is still showing (Android lets an app with a

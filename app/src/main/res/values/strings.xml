@@ -3,4 +3,5 @@
     <string name="app_name">Control</string>
     <string name="service_label">Control by Numio panel</string>
     <string name="service_description">Shows the Control by Numio panel when you swipe in from the edge of the screen. It only draws its own panel. It does not read the screen, what you type or your notifications, and the app has no internet access.</string>
+    <string name="media_label">Control by Numio music card</string>
 </resources>

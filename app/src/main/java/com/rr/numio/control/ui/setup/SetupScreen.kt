@@ -78,8 +78,11 @@ fun SetupScreen(settings: AppSettings, refreshKey: Int) {
         context.getSystemService(NotificationManager::class.java).isNotificationPolicyAccessGranted
     }
     val theme by settings.themeMode.collectAsState(initial = ThemeMode.DEFAULT)
-    val scene by settings.scene.collectAsState(initial = PanelScene.NONE)
+    val scene by settings.scene.collectAsState(initial = PanelScene.NIGHT_GARDEN)
     val handle by settings.handle.collectAsState(initial = HandleSettings(HandleSide.RIGHT, HandlePosition.TOP))
+    val hasMusic = remember(refreshKey) {
+        androidx.core.app.NotificationManagerCompat.getEnabledListenerPackages(context).contains(context.packageName)
+    }
     val version = remember {
         runCatching { context.packageManager.getPackageInfo(context.packageName, 0).versionName }.getOrNull() ?: ""
     }
@@ -161,6 +164,13 @@ fun SetupScreen(settings: AppSettings, refreshKey: Int) {
                     done = hasDnd,
                     onClick = { context.openSafely(Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)) },
                 )
+                Divider()
+                Step(
+                    title = "Music card (optional)",
+                    body = "Allow notification access, so the panel can show what's playing and control it. Notifications are never read.",
+                    done = hasMusic,
+                    onClick = { context.openSafely(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)) },
+                )
             }
             PrimaryButton(
                 text = if (serviceOn) "Show panel now" else "Turn on the panel first",
@@ -206,9 +216,9 @@ fun SetupScreen(settings: AppSettings, refreshKey: Int) {
                 }
                 Divider()
                 Choice(
-                    label = "Picture",
-                    options = listOf("None" to (scene == PanelScene.NONE), "Night room" to (scene == PanelScene.NIGHT_ROOM)),
-                    onPick = { i -> scope.launch { settings.setScene(if (i == 0) PanelScene.NONE else PanelScene.NIGHT_ROOM) } },
+                    label = "Scene",
+                    options = listOf("Night garden" to (scene == PanelScene.NIGHT_GARDEN), "Plain" to (scene == PanelScene.NONE)),
+                    onPick = { i -> scope.launch { settings.setScene(if (i == 0) PanelScene.NIGHT_GARDEN else PanelScene.NONE) } },
                 )
                 Divider()
                 Choice(

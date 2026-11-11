@@ -29,7 +29,17 @@ private fun lineIcon(name: String, path: String, filled: String? = null): ImageV
     return b.build()
 }
 
+private fun solidIcon(name: String, path: String): ImageVector = ImageVector.Builder(
+    name = name, defaultWidth = 24.dp, defaultHeight = 24.dp, viewportWidth = 24f, viewportHeight = 24f,
+).addPath(pathData = addPathNodes(path), fill = SolidColor(Color.Black)).build()
+
 object ControlIcons {
+    val Play = solidIcon("play", "M8 5.5v13a1 1 0 0 0 1.5 .86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z")
+    val Pause = solidIcon("pause", "M7 5h3.5v14H7zM13.5 5H17v14h-3.5z")
+    val Next = solidIcon("next", "M5 6v12l9-6zM16 6h2.5v12H16z")
+    val Previous = solidIcon("previous", "M19 6v12l-9-6zM8 6H5.5v12H8z")
+    val Music = lineIcon("music", "M9 18V5l11-2v13M9 18a3 3 0 1 1-6 0a3 3 0 1 1 6 0zM20 16a3 3 0 1 1-6 0a3 3 0 1 1 6 0z")
+    val Output = lineIcon("output", "M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v7M4 6v9a2 2 0 0 0 2 2h4M14 14h6v6h-6zM2 21h8")
     val Wifi = lineIcon("wifi", "M2 8.5a15 15 0 0 1 20 0M5 12a10 10 0 0 1 14 0M8.5 15.5a5 5 0 0 1 7 0", "M12 18a1.3 1.3 0 1 1 0 2.6a1.3 1.3 0 1 1 0-2.6z")
     val Bluetooth = lineIcon("bluetooth", "M7 7l10 10-5 5V2l5 5L7 17")
     val Sound = lineIcon("sound", "M4 9h4l5-4v14l-5-4H4zM16.5 8.5a5 5 0 0 1 0 7M19.5 6a9 9 0 0 1 0 12")

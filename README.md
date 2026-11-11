@@ -45,9 +45,18 @@ Android doesn't let an app replace the system's swipe-down panel. Instead, Contr
 - **Whole top**: swipe down anywhere for Control; the bell button in the panel opens notifications
 - **Side edge**: a thin amber handle on the left or right edge
 
-## Pictures
+## Scenes
 
-Settings → Panel → **Picture** puts a picture behind the panel. **Night room** is a test picture (a window with the moon, a lamp, plants and a mug) with a sleeping kitten on the Wi-Fi / Bluetooth bar. It will be replaced by RR's own drawings in the Looks milestone.
+Settings → Panel → **Scene**:
+
+- **Night garden** (default): an illustrated night room (window and moon, lantern, hanging plants) behind warm, translucent panel surfaces with thin amber edges, a fluffy black kitten peeking over the Wi-Fi bar and a few twinkling stars. The artwork never covers a button or label.
+- **Plain**: Numio dark / light, no picture.
+
+The current pictures are test art; RR's own drawings replace them in the Looks milestone.
+
+## Music card
+
+Shows what's playing in any app, with play / pause, next, previous, the album art and a "where to play" button (Android's own speaker / headphones picker on Android 14+). Android only shares what's playing with apps that have **notification access**, so the card asks for it. That access goes to an empty listener service ([`MediaListener`](app/src/main/java/com/rr/numio/control/service/MediaListener.kt)): Control by Numio never reads, keeps or sends notifications. It's optional; without it the card just offers to turn it on.
 
 ## Accessibility
 
@@ -64,7 +73,7 @@ Settings → Panel → **Picture** puts a picture behind the panel. **Night room
 |---|-----------|--------------|
 | 1 | **Panel** (this) | Accessibility service, edge handle with back-gesture exclusion, panel window with blur on supported phones, Wi-Fi/Bluetooth pills, 10-button grid, brightness and volume sliders, power menu, setup screen, dark / light / system, tests, CI |
 | 2 | Editor | Rearrange, add and remove buttons and cards, with TalkBack "move earlier / later" actions |
-| 3 | Music and counts | Music card with album art (notification access, optional), Calls and Messages counts |
+| 3 | Counts | Calls and Messages counts (the music card is already in) |
 | 4 | Looks | Ink theme, your own background picture, scene themes with RR's drawings, reduce motion, large buttons |
 | 5 | Polish | App icon, About page and Numio easter egg, F-Droid listing |
 

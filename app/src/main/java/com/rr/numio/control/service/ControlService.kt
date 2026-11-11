@@ -79,7 +79,7 @@ class ControlService : AccessibilityService() {
     private var panelVisible by mutableStateOf(false)
     private var theme by mutableStateOf(ThemeMode.DEFAULT)
     private var layout by mutableStateOf(PanelLayout.DEFAULT)
-    private var scene by mutableStateOf(PanelScene.NONE)
+    private var scene by mutableStateOf(PanelScene.NIGHT_GARDEN)
 
     private val screenOff = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) = removePanelNow()
